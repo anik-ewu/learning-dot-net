@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using UserManager.Application.Common.Attributes;
 using UserManager.Application.Users.Commands;
 using UserManager.Application.Users.Queries;
 
@@ -29,5 +30,12 @@ public class UsersController : ControllerBase
         var user = await _mediator.Send(new GetUserByIdQuery(id));
         if (user == null) return NotFound();
         return Ok(user);
+    }
+
+    [HttpGet("all")]
+    [RequiresAdmin]
+    public IActionResult GetAllUsers()
+    {
+        return Ok(new[] { "AdminUser1", "AdminUser2" });
     }
 }
