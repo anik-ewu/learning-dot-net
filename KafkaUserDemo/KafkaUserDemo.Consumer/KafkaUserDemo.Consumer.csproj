@@ -14,5 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\KafkaUserDemo.Domain\KafkaUserDemo.Domain.csproj" />
+    <PackageReference Include="MongoDB.Driver" Version="3.3.0" />
   </ItemGroup>
 </Project>

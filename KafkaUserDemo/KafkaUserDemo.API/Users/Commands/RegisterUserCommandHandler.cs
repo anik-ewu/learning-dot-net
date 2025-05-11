@@ -13,7 +13,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
 
         using var producer = new ProducerBuilder<Null, string>(config).Build();
 
-        var user = new User
+        var user = new UserItem
         {
             Id = Guid.NewGuid(),
             Name = request.Name,

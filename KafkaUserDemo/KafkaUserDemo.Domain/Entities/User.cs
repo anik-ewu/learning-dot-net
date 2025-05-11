@@ -1,6 +1,6 @@
 namespace KafkaUserDemo.Domain.Entities;
 
-public class User
+public class UserItem
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = "";
