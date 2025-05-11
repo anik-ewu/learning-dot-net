@@ -1,8 +1,8 @@
+using System.Text;
+using System.Text.Json;
 using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System.Text;
-using System.Text.Json;
 using UserService.Domain.Entities;
 using UserService.Infrastructure.Repositories;
 
@@ -22,8 +22,12 @@ public class Worker : BackgroundService
 
         consumer.Received += async (model, ea) =>
         {
+            Console.WriteLine("Message received from RabbitMQ"); // <--- Add this
+
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
+
+            Console.WriteLine($"Raw Message: {message}"); // <--- Add this
 
             var user = JsonSerializer.Deserialize<User>(message);
 
@@ -32,9 +36,14 @@ public class Worker : BackgroundService
                 var repository = new UserRepository();
                 await repository.AddUserAsync(user);
 
-                Console.WriteLine($"User saved: {user.Name} - {user.Email}");
+                Console.WriteLine($"User saved to MongoDB: {user.Name} - {user.Email}"); // <--- Add this
+            }
+            else
+            {
+                Console.WriteLine("Failed to deserialize User"); // <--- Add this
             }
         };
+
 
         channel.BasicConsume(queue: "user-registered", autoAck: true, consumer: consumer);
 
