@@ -1,4 +1,5 @@
 using KafkaUserDemo.Domain.Entities;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace KafkaUserDemo.Consumer.Data;
@@ -9,7 +10,10 @@ public class MongoDbContext
 
     public MongoDbContext()
     {
-        var client = new MongoClient("mongodb+srv://Cluster79073:7qdavcpoK79G9YUY@cluster79073.ick23.mongodb.net/UserManager-RabbitMQ?retryWrites=true&w=majority");
+        var settings = MongoClientSettings.FromConnectionString("mongodb+srv://Cluster79073:7qdavcpoK79G9YUY@cluster79073.ick23.mongodb.net/UserManager-RabbitMQ?retryWrites=true&w=majority");
+        settings.GuidRepresentation = GuidRepresentation.Standard;
+        
+        var client = new MongoClient(settings);
         _database = client.GetDatabase("UserManager-RabbitMQ");
     }
 

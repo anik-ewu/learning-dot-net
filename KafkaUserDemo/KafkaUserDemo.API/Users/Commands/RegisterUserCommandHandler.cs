@@ -5,9 +5,9 @@ using KafkaUserDemo.Domain.Entities;
 
 namespace KafkaUserDemo.API.Users.Commands;
 
-public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
+public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Unit>
 {
-    public async Task Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
         var config = new ProducerConfig { BootstrapServers = "localhost:9092" };
 
@@ -25,5 +25,6 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
         await producer.ProduceAsync("user-registered", new Message<Null, string> { Value = message });
 
         Console.WriteLine("Message published to Kafka.");
+        return Unit.Value;
     }
 }
