@@ -7,7 +7,12 @@ namespace KafkaUserDemo.Consumer;
 
 public class Worker : BackgroundService
 {
-    private readonly MongoDbContext _mongoDb = new();
+    private readonly MongoDbContext _mongoDb;
+
+    public Worker(MongoDbContext mongoDbContext)
+    {
+        _mongoDb = mongoDbContext;
+    }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

@@ -1,7 +1,13 @@
 using KafkaUserDemo.Consumer;
+using KafkaUserDemo.Consumer.Data;
 
-var builder = Host.CreateApplicationBuilder(args);
-builder.Services.AddHostedService<Worker>();
+IHost host = Host.CreateDefaultBuilder(args)
+    .ConfigureServices(services =>
+    {
+        services.AddSingleton<MongoDbContext>(); // ✅ Add this line
+        services.AddHostedService<Worker>();
+    })
+    .Build();
 
-var host = builder.Build();
-host.Run();
+await host.RunAsync();
+
