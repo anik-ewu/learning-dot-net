@@ -11,4 +11,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\JobBoard.Application\JobBoard.Application.csproj" />
+    <ProjectReference Include="..\JobBoard.Infrastructure\JobBoard.Infrastructure.csproj" />
+    <ProjectReference Include="..\JobBoard.Persistence\JobBoard.Persistence.csproj" />
+    <ProjectReference Include="..\JobBoard.Domain\JobBoard.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
