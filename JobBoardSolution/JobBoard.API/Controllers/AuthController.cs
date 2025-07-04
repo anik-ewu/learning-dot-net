@@ -67,6 +67,35 @@ public class AuthController : ControllerBase
         return Ok(new AuthResponse(accessToken, refreshToken.Token));
     }
 
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh(RefreshRequest request)
+    {
+        var user = await _db.Users
+            .Include(u => u.RefreshTokens)
+            .FirstOrDefaultAsync(u => u.RefreshTokens
+                .Any(rt => rt.Token == request.RefreshToken));
+        
+        if (user is null)
+            return Unauthorized("Invalid refresh token");
+
+        var existing = user.RefreshTokens.First(rt => rt.Token == request.RefreshToken);
+
+        if (existing.IsRevoked || existing.Expires < DateTime.UtcNow)
+            return Unauthorized("Refresh token is expired or revoked");
+        
+        // Revoke old token
+        existing.IsRevoked = true;
+
+        // Generate new tokens
+        var newRefresh = _tokenService.GenerateRefreshToken();
+        user.RefreshTokens.Add(newRefresh);
+        var newAccess = _tokenService.GenerateAccessToken(user);
+
+        await _db.SaveChangesAsync();
+
+        return Ok(new AuthResponse(newAccess, newRefresh.Token));
+    }
+
     private string ComputeHash(string input)
     {
         using var sha = SHA256.Create();
